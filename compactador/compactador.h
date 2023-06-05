@@ -4,6 +4,7 @@
 #define SET_BIT_ON(value, mask) ((value) | (mask))
 #define SET_BIT_OFF(value, mask) ((value) & ~(mask))
 #define WRITE_BIN(dest, src, mask) (((src) & (mask)) | ((dest) & ~(mask)))
+#define GET_BIN(src, pos) (((src) & (1 << (pos))) >> (pos))
 
 constexpr uint8_t unsigned_eof(0xff);
 
@@ -35,8 +36,8 @@ class Compactador {
 };
 
 struct InfoByte {
-  uint64_t qtd_bits;
-  uint64_t bits_buff[4];
+  uint8_t qtd_bits;
+  uint8_t bits_buff[32];
 };
 
 struct TabelaValores {

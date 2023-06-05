@@ -22,8 +22,8 @@ void TabelaValores::percursoPreOrdem(No* arvore_bytes, uint16_t indice, uint32_t
   if (indice < folhas) {
     this->conteudo[arvore_bytes[indice].conteudoNo.caractere] = info;
   } else {
-    uint32_t pos_novo_bit = info.qtd_bits % 64;
-    uint32_t pos_qword = info.qtd_bits / 64;
+    uint32_t pos_novo_bit = info.qtd_bits % 8;
+    uint32_t pos_byte = info.qtd_bits / 8;
 
     uint64_t mask = 1 << pos_novo_bit;
     
@@ -31,10 +31,10 @@ void TabelaValores::percursoPreOrdem(No* arvore_bytes, uint16_t indice, uint32_t
     InfoByte info_esq = info;
 
     info_dir.qtd_bits++;
-    info_dir.bits_buff[pos_qword] = SET_BIT_OFF(info_dir.bits_buff[pos_qword], mask);
+    info_dir.bits_buff[pos_byte] = SET_BIT_OFF(info_dir.bits_buff[pos_byte], mask);
 
     info_esq.qtd_bits++;
-    info_esq.bits_buff[pos_qword] = SET_BIT_ON(info_esq.bits_buff[pos_qword], mask);
+    info_esq.bits_buff[pos_byte] = SET_BIT_ON(info_esq.bits_buff[pos_byte], mask);
 
     uint16_t filho_esq = arvore_bytes[indice].conteudoNo.conteudoNoInterno.esq;
     uint16_t filho_dir = arvore_bytes[indice].conteudoNo.conteudoNoInterno.dir;
@@ -109,20 +109,38 @@ void Compactador::compactar(const char* entrada, const char* saida) {
     // TODO: Escrever o numero de bytes
     
     TabelaValores tabela(arvore_bytes, bytes_inseridos);
+
     uint8_t byte_buf;
     uint8_t buf_ptr = 0;
     uint8_t buf_mask = 1;
-
+    std::cout << int(byte_buf) << std::endl;
     uint8_t c;
     while ((c = ler_arquivo.get()) != unsigned_eof) {
       InfoByte info = tabela.conteudo[c];
-      
-      for (int k = 0; k < info.qtd_bits; k++) {
-        uint8_t pos_bit = k % 64;
-        uint8_t pos_qword = k / 64;
 
+      for (uint64_t k = 0; k < info.qtd_bits; k++) {
+        uint8_t bit_pos = k % 8;
+        uint8_t byte_pos = k / 8;
+        uint8_t bit_got = GET_BIN(info.bits_buff[byte_pos], bit_pos);
         
+        if (bit_got) {
+          byte_buf = SET_BIT_ON(byte_buf, buf_mask << buf_ptr);
+        } else {
+          byte_buf = SET_BIT_OFF(byte_buf, buf_mask << buf_ptr);
+        }
+
+        std::cout << int(byte_buf) << std::endl;
+
+        buf_ptr++;
+        if (buf_ptr == 8) {
+          escrever_arquivo << byte_buf;
+          buf_ptr = 0;
+        }
       }
+    }
+
+    if (buf_ptr != 0) {
+      escrever_arquivo << byte_buf;
     }
 
     // CASO 2: número de bytes é igual a 1
