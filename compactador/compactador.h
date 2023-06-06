@@ -13,14 +13,9 @@ struct ConteudoNoInterno {
   uint16_t dir;
 };
 
-union ConteudoNo {
+union No {
   ConteudoNoInterno conteudoNoInterno;
   uint8_t caractere;
-};
-
-struct No {
-  uint32_t peso;
-  ConteudoNo conteudoNo;
 };
 
 struct ElementoArvore {
@@ -33,6 +28,7 @@ bool operator < (const ElementoArvore& el1, const ElementoArvore& el2);
 class Compactador {
   public:
     void compactar(const char* entrada, const char* saida);
+    void descompactar(const char* entrada, const char* saida);
 };
 
 struct InfoByte {

@@ -1,10 +1,8 @@
-#include <iostream>
 #include "./compactador/compactador.h"
-#include "./heap/heap.impl.h"
 
 int main() {
-  Compactador compactador;
-  compactador.compactar("teste.txt", "saida.cmp");
-
-  return 0;
+    Compactador compactador;
+    compactador.compactar("teste.txt", "saida");
+    compactador.descompactar("saida", "saida.txt");
+    return 0;
 }
