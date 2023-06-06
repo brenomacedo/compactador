@@ -221,6 +221,16 @@ void Compactador::descompactar(const char* entrada, const char* saida) {
     }
     
   } else if (tamanho_arquivo == 5) { // ARQUIVO COMPACTADO PELO CASO 2
+    uint32_t total_bytes;
 
+    void* void_total_bytes_pointer = static_cast<void*>(&total_bytes);
+    char* total_bytes_pointer = static_cast<char*>(void_total_bytes_pointer);
+    ler_arquivo.read(total_bytes_pointer, sizeof(total_bytes));
+
+    uint8_t c = ler_arquivo.get();
+
+    for (uint32_t i = 0; i < total_bytes; i++) {
+      escrever_arquivo << c;
+    }
   } // ARQUIVO COMPACTADO PELO CASO 3
 }
