@@ -6,8 +6,6 @@
 #define WRITE_BIN(dest, src, mask) (((src) & (mask)) | ((dest) & ~(mask)))
 #define GET_BIN(src, pos) (((src) & (1 << (pos))) >> (pos))
 
-constexpr uint8_t unsigned_eof(0xff);
-
 struct ConteudoNoInterno {
   uint16_t esq;
   uint16_t dir;
@@ -27,8 +25,8 @@ bool operator < (const ElementoArvore& el1, const ElementoArvore& el2);
 
 class Compactador {
   public:
-    void compactar(const char* entrada, const char* saida);
-    void descompactar(const char* entrada, const char* saida);
+    static void compactar(const char* entrada, const char* saida);
+    static void descompactar(const char* entrada, const char* saida);
 };
 
 struct InfoByte {

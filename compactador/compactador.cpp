@@ -51,7 +51,10 @@ void Compactador::compactar(const char* entrada, const char* saida) {
   std::ofstream escrever_arquivo(saida, std::ios::binary);
 
   uint8_t c;
-  while ((c = ler_arquivo.get()) != unsigned_eof) {
+  while (true) {
+    c = ler_arquivo.get();
+    if (ler_arquivo.eof()) break;
+
     total_bytes++;
     contagem[c]++;
   }
@@ -124,7 +127,10 @@ void Compactador::compactar(const char* entrada, const char* saida) {
     uint8_t buf_mask = 1;
 
     uint8_t c;
-    while ((c = ler_arquivo.get()) != unsigned_eof) {
+    while (true) {
+      c = ler_arquivo.get();
+      if (ler_arquivo.eof()) break;
+
       InfoByte info = tabela.conteudo[c];
 
       for (uint64_t k = 0; k < info.qtd_bits; k++) {
@@ -218,8 +224,7 @@ void Compactador::descompactar(const char* entrada, const char* saida) {
 
       idx_arvore = raiz;
       bytes_lidos++;
-    }
-    
+    }   
   } else if (tamanho_arquivo == 5) { // ARQUIVO COMPACTADO PELO CASO 2
     uint32_t total_bytes;
 
