@@ -46,7 +46,7 @@ void TabelaValores::percursoPreOrdem(No* arvore_bytes, uint16_t indice, uint32_t
 
 void Compactador::compactar(const char* entrada, const char* saida) {
   uint32_t total_bytes = 0;
-  uint8_t contagem[256] = {0};
+  uint32_t contagem[256] = {0};
   std::ifstream ler_arquivo(entrada, std::ios::binary);
   std::ofstream escrever_arquivo(saida, std::ios::binary);
 
